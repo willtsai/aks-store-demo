@@ -152,55 +152,6 @@ jobs:
         with:
           namespace: ${{ vars.KUBERNETES_NAMESPACE || 'default' }}
 
-      - name: Force-clear stranded resources
-        # A prior deploy/delete whose ephemeral control plane was torn down mid-flight
-        # left resources in a non-terminal 'Updating' provisioningState. rad startup
-        # restores that state verbatim and no async operation ever completes them, so
-        # `rad app delete` returns 409 ("The target resource is in progress state:
-        # Updating.") on every run. The delete controller only rejects resources whose
-        # provisioningState is non-terminal (armrpc IsTerminal: Succeeded/Failed/
-        # Canceled/empty), so force every stranded resource to the terminal 'Failed'
-        # state directly in the restored control-plane PostgreSQL. This runs against
-        # the k3d control-plane cluster (default kubeconfig) where radius-system and
-        # its 'database' StatefulSet live -- not the target AKS cluster. State stays
-        # consistent because the subsequent `rad app delete` removes these records and
-        # `rad shutdown` (teardown) persists the cleaned state.
-        run: |
-          set -euo pipefail
-          kubectl rollout status statefulset/database -n radius-system --timeout=180s
-          DBPOD=$(kubectl get pod -n radius-system -l app.kubernetes.io/name=database \
-            -o jsonpath='{.items[0].metadata.name}')
-          # The postgres superuser (database.postgres_user, default 'radius') and the
-          # shared POSTGRES_PASSWORD can reach every per-provider database.
-          PGUSER=$(kubectl get secret database-secret -n radius-system \
-            -o jsonpath='{.data.POSTGRES_USER}' | base64 -d)
-          PGPASSWORD=$(kubectl get secret database-secret -n radius-system \
-            -o jsonpath='{.data.POSTGRES_PASSWORD}' | base64 -d)
-          # provisioningState is a top-level key in resource_data (promoted from the
-          # embedded armrpc InternalMetadata). Terminal states are excluded below.
-          NONTERMINAL="resource_data->>'provisioningState' NOT IN ('Succeeded','Failed','Canceled','None','NotSpecified','')"
-          psql_db() {
-            local db="$1"; shift
-            kubectl exec -n radius-system "$DBPOD" -- env PGPASSWORD="$PGPASSWORD" \
-              psql -U "$PGUSER" -d "$db" -At -v ON_ERROR_STOP=1 "$@"
-          }
-          # Radius stores resources in a separate database per resource provider, each
-          # with its own 'resources' table: ucp, applications_rp, and dynamic_rp -- the
-          # last holds the user-defined resources (Radius.Compute/containerImages,
-          # Radius.Data/mongoDatabases, Radius.Messaging/rabbitMQ) that were stranded
-          # in the 'Updating' state. Force any non-terminal resource in each to 'Failed'.
-          for DB in ucp applications_rp dynamic_rp; do
-            echo "=== database: $DB ==="
-            if [ "$(psql_db "$DB" -c "SELECT to_regclass('public.resources') IS NOT NULL;")" != "t" ]; then
-              echo "no 'resources' table; skipping"
-              continue
-            fi
-            echo "Stranded (non-terminal) resources before fix:"
-            psql_db "$DB" -c "SELECT resource_data->>'provisioningState' || '  ' || original_id FROM resources WHERE $NONTERMINAL;"
-            psql_db "$DB" -c "UPDATE resources SET resource_data = jsonb_set(resource_data, '{provisioningState}', '\"Failed\"'::jsonb) WHERE $NONTERMINAL;"
-            echo "Non-terminal resources remaining in $DB after fix: $(psql_db "$DB" -c "SELECT count(*) FROM resources WHERE $NONTERMINAL;")"
-          done
-
       - name: Register cloud credentials with Radius
         run: |
           # Register the Azure identity so the recipe deletes can authenticate,
