@@ -235,6 +235,21 @@ export ORDER_DB_PASSWORD=$COSMOSDBPASSWORD
 
 > NOTE: With Azure CosmosDB, you must ensure the orderdb database and an unsharded orders collection exist before running the app. Otherwise you will get a "server selection error".
 
+## Cache options
+
+To improve read performance, the app can put a [Redis](https://redis.io/) cache in front of the database. Pending-order and single-order reads are served from Redis when available and fall back to the database on a miss. Writes go through to the database and then invalidate the affected cache entries.
+
+The cache is **optional**: if `REDIS_HOST` is not set (or Redis is unreachable), the app runs normally by reading directly from the database.
+
+The provided docker-compose files include a Redis container. To point the app at it, set the following environment variables:
+
+```bash
+export REDIS_HOST=localhost
+export REDIS_PORT=6379          # optional, defaults to 6379
+# export REDIS_PASSWORD=password  # optional, only if Redis requires auth
+# export REDIS_CACHE_TTL_SECONDS=10  # optional, cache entry TTL, defaults to 10
+```
+
 ## Running the app locally
 
 The app relies on RabbitMQ and DocumentDB. Additionally, to simulate orders, you will need to run the [order-service](../order-service) with the [virtual-customer](../virtual-customer) app. A docker-compose file is provided to make this easy.

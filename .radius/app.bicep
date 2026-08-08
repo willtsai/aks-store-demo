@@ -42,6 +42,15 @@ resource mongodb 'Radius.Data/mongoDatabases@2025-08-01-preview' = {
   }
 }
 
+resource redis 'Radius.Data/redisCaches@2025-08-01-preview' = {
+  name: 'redis'
+  properties: {
+    environment: environment
+    application: storeApp.id
+    codeReference: 'src/makeline-service/cache.go#L37'
+  }
+}
+
 resource registryCreds 'Radius.Security/secrets@2025-08-01-preview' = {
   name: 'radius-ghcr-registry-creds'
   properties: {
@@ -237,6 +246,12 @@ resource makelineServiceContainer 'Radius.Compute/containers@2025-08-01-preview'
           ORDER_DB_PASSWORD: {
             value: orderDbPassword
           }
+          REDIS_HOST: {
+            value: redis.properties.host
+          }
+          REDIS_PORT: {
+            value: '6379'
+          }
         }
       }
     }
@@ -246,6 +261,9 @@ resource makelineServiceContainer 'Radius.Compute/containers@2025-08-01-preview'
       }
       mongodb: {
         source: mongodb.id
+      }
+      redis: {
+        source: redis.id
       }
     }
   }

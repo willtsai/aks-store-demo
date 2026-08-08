@@ -38,6 +38,8 @@ func main() {
 		for i := 0; i < maxRetries; i++ {
 			orderService, err = initDatabase(apiType)
 			if err == nil {
+				// Put a Redis read cache in front of the database when configured.
+				orderService.repo = NewCachedOrderRepoIfEnabled(orderService.repo)
 				dbReady.Store(true)
 				log.Printf("Database initialized successfully")
 
