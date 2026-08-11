@@ -12,7 +12,7 @@ on:
       environment:
         description: 'GitHub Environment name'
         required: true
-        default: 'aks-dev'
+        default: 'Test'
       application:
         description: 'Name of the application to delete'
         required: true
@@ -30,7 +30,7 @@ jobs:
   detect:
     name: Detect provider
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'aks-dev' }}
+    environment: ${{ inputs.environment || 'Test' }}
     outputs:
       provider: ${{ steps.detect.outputs.provider }}
     steps:
@@ -53,7 +53,7 @@ jobs:
     if: ${{ needs.detect.outputs.provider == 'azure' }}
     uses: ./.github/workflows/delete-azure.yml
     with:
-      environment: ${{ inputs.environment || 'aks-dev' }}
+      environment: ${{ inputs.environment || 'Test' }}
       resource_type: application
       name: ${{ inputs.application }}
     secrets: inherit
