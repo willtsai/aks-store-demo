@@ -14,7 +14,7 @@ on:
       environment:
         description: 'GitHub Environment name'
         required: true
-        default: 'Test2'
+        default: 'Test'
       image:
         description: 'Container image passed only when the application template declares the image parameter'
         required: false
@@ -45,7 +45,7 @@ jobs:
   detect:
     name: Detect provider
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'Test2' }}
+    environment: ${{ inputs.environment || 'Test' }}
     # On workflow_dispatch run unconditionally; on workflow_run only when the
     # upstream Verify Credentials run succeeded.
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
@@ -71,7 +71,7 @@ jobs:
     if: ${{ needs.detect.outputs.provider == 'azure' }}
     uses: ./.github/workflows/run-rad-commands-azure.yml
     with:
-      environment: ${{ inputs.environment || 'Test2' }}
+      environment: ${{ inputs.environment || 'Test' }}
       image: ${{ inputs.image }}
       rad_commands: ${{ inputs.rad_commands }}
     secrets: inherit
