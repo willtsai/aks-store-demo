@@ -99,7 +99,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:af4a3d2c65133bb457ca7802f89c1ef73056f0fe8c96bccf4cd026548df2f9ee",
+      "diffHash": "sha256:bc249153f3f8cd87993cc88432e34b5f14703210d6776cc5b622586613556917",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/makeline-service-image",
       "name": "makeline-service-image",
@@ -107,8 +107,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/makeline-service/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -211,7 +212,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:ca5ff8c7dda72d28d437d931896027aea3d9a0adef8b6ff48fe5c2c28c912209",
+      "diffHash": "sha256:46f1df4e46774d1b78f627a85cab9a27c3d8220e5509ef77fdece5881bb9698c",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/order-service-image",
       "name": "order-service-image",
@@ -219,8 +220,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/order-service/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -244,7 +246,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:ebbfec6898b0675105af7faf25dc3ca1d147efff35232b3102513cbb59150657",
+      "diffHash": "sha256:f2818f6384167de820976525598c208d8047640217231d62b811ff15e5ceec22",
       "iconHash": "b15466644c2efcfae34f31c914d0926d10ac1fe641d730f5b0f25955f2b9b5a9",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containers/product-service",
       "name": "product-service",
@@ -253,11 +255,6 @@
         "application": "[reference('storeApp').id]",
         "containers": {
           "productService": {
-            "env": {
-              "AI_SERVICE_URL": {
-                "value": "http://ai-service:5001/"
-              }
-            },
             "image": "[reference('productServiceImage').properties.imageReference]",
             "ports": {
               "web": {
@@ -284,7 +281,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:594458b4420ad74fade4d140622efe723f411d7d0d87d3ce8a016680694442e4",
+      "diffHash": "sha256:f7f7f3b1fc32df6d7d6f6b5c7c780bade383627a935b1f12a7a1f07397a36368",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/product-service-image",
       "name": "product-service-image",
@@ -292,8 +289,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/product-service/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -312,14 +310,14 @@
           "kind": "Connection"
         }
       ],
-      "diffHash": "sha256:15c68828dde3c7223bcf1a5ac45cfbf168243dc8dcb1405ef93997fa2db1816f",
+      "diffHash": "sha256:2c52318229c4df9ab9cefc515bc9a70540ef397799536a213dd8560ef4f6bfdb",
       "iconHash": "51b5f6e831c01f84a4348145b226d1965007cfbb6fddacb8046148f1698e359d",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Messaging/rabbitMQ/rabbitmq",
       "name": "rabbitmq",
       "outputResources": [],
       "properties": {
         "application": "[reference('storeApp').id]",
-        "codeReference": "src/order-service/plugins/messagequeue.js#L33",
+        "codeReference": "src/order-service/plugins/messagequeue.js#L26",
         "environment": "[parameters('environment')]",
         "queue": "orders"
       },
@@ -374,7 +372,7 @@
         "data": {
           "password": null,
           "username": {
-            "value": "[parameters('registryUsername')]"
+            "value": null
           }
         },
         "environment": "[parameters('environment')]"
@@ -435,7 +433,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:d2153ad3b7b78aa75da20bc9b15d67bcc3c27a521dbcc4613c95d0cfcdde7a7f",
+      "diffHash": "sha256:189fd247e68f3ce8ce8af3cfbea7f915f2bb09ba6025c86303497445249dabf6",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/store-admin-image",
       "name": "store-admin-image",
@@ -443,8 +441,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/store-admin/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -503,7 +502,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:94bf82649dfb9947fd48cef224f152ccda2645778d73c990bfd12fead2ac1e70",
+      "diffHash": "sha256:5947299a05f1c6c1dcabb787836386e829dfe0cbcc4590aa69785086b52cf121",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/store-front-image",
       "name": "store-front-image",
@@ -511,8 +510,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/store-front/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -531,7 +531,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:5f1b17d152f42413b7ad5e979e9a45fb9b38a1d7dbdc7c19fa1900c8055bc2bc",
+      "diffHash": "sha256:44d7669c29ff94d8852535eed10e57ced67ff9c26d5b048854b108ba1512fab6",
       "iconHash": "b15466644c2efcfae34f31c914d0926d10ac1fe641d730f5b0f25955f2b9b5a9",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containers/virtual-customer",
       "name": "virtual-customer",
@@ -542,10 +542,10 @@
           "virtualCustomer": {
             "env": {
               "ORDERS_PER_HOUR": {
-                "value": "100"
+                "value": "30"
               },
               "ORDER_SERVICE_URL": {
-                "value": "http://order-service:3000/"
+                "value": "[format('http://{0}:3000/', reference('orderServiceContainer').properties.hosts.orderService)]"
               }
             },
             "image": "[reference('virtualCustomerImage').properties.imageReference]"
@@ -569,7 +569,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:1815513da940df1ccec42fecd0181f9681ff55ea5cda187a59fd9ffe1045fd19",
+      "diffHash": "sha256:ad09fd17e751661bee0538bf72b22339964d14085ed5770f00d6cfad8fb5ab2b",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/virtual-customer-image",
       "name": "virtual-customer-image",
@@ -577,8 +577,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/virtual-customer/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",
@@ -597,7 +598,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:ab81a163e335bcf6b3f2e0a4b0aee25540393c4809e237ecf5e05e3f9bd6bd76",
+      "diffHash": "sha256:6b795600659cf1df388a6133d0ae682a0a9295c08d30e3287e2659778884fbbe",
       "iconHash": "b15466644c2efcfae34f31c914d0926d10ac1fe641d730f5b0f25955f2b9b5a9",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containers/virtual-worker",
       "name": "virtual-worker",
@@ -608,10 +609,10 @@
           "virtualWorker": {
             "env": {
               "MAKELINE_SERVICE_URL": {
-                "value": "http://makeline-service:3001"
+                "value": "[format('http://{0}:3001', reference('makelineServiceContainer').properties.hosts.makelineService)]"
               },
               "ORDERS_PER_HOUR": {
-                "value": "100"
+                "value": "20"
               }
             },
             "image": "[reference('virtualWorkerImage').properties.imageReference]"
@@ -635,7 +636,7 @@
           "kind": "Dependency"
         }
       ],
-      "diffHash": "sha256:b0e33dcb38e98528cd1508142ca02eddf2880f12544cc8d3640a94c4898c4b57",
+      "diffHash": "sha256:60c895c4bce7ba9999ecf0af6243966cdeace93857911fcb6210a2e9e2f15144",
       "iconHash": "48a16548bd45c8c45db8c975308cf587a76a4c1b18d88bce9ced7d5b78095edf",
       "id": "/planes/radius/local/resourcegroups/default/providers/Radius.Compute/containerImages/virtual-worker-image",
       "name": "virtual-worker-image",
@@ -643,8 +644,9 @@
       "properties": {
         "application": "[reference('storeApp').id]",
         "build": {
-          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5"
+          "source": "git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43"
         },
+        "codeReference": "src/virtual-worker/Dockerfile",
         "environment": "[parameters('environment')]"
       },
       "provisioningState": "NotSpecified",

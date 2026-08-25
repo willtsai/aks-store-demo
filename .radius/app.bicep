@@ -65,7 +65,7 @@ resource makelineServiceImage 'Radius.Compute/containerImages@2025-08-01-preview
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/makeline-service/Dockerfile'
   }
@@ -80,7 +80,7 @@ resource orderServiceImage 'Radius.Compute/containerImages@2025-08-01-preview' =
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/order-service/Dockerfile'
   }
@@ -95,7 +95,7 @@ resource productServiceImage 'Radius.Compute/containerImages@2025-08-01-preview'
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/product-service/Dockerfile'
   }
@@ -110,7 +110,7 @@ resource storeAdminImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/store-admin/Dockerfile'
   }
@@ -125,7 +125,7 @@ resource storeFrontImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/store-front/Dockerfile'
   }
@@ -140,7 +140,7 @@ resource virtualCustomerImage 'Radius.Compute/containerImages@2025-08-01-preview
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/virtual-customer/Dockerfile'
   }
@@ -155,7 +155,7 @@ resource virtualWorkerImage 'Radius.Compute/containerImages@2025-08-01-preview' 
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=717ba88d5c06cdec672eeeea591d41ae7bee5d43'
     }
     codeReference: 'src/virtual-worker/Dockerfile'
   }
