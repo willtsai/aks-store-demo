@@ -3,6 +3,7 @@ extension radius
 param environment string
 
 @description('Username for the OCI registry the containerImages recipe pushes to (the GitHub actor for ghcr.io).')
+@secure()
 param registryUsername string
 
 @description('Password/token for the OCI registry the containerImages recipe pushes to (a GitHub token with write:packages for ghcr.io).')
@@ -10,10 +11,10 @@ param registryUsername string
 param registryPassword string
 
 @secure()
-param orderQueuePassword string
+param orderDbPassword string
 
 @secure()
-param orderDbPassword string
+param orderQueuePassword string
 
 resource storeApp 'Radius.Core/applications@2025-08-01-preview' = {
   name: 'aks-store-demo'
@@ -28,7 +29,7 @@ resource rabbitmq 'Radius.Messaging/rabbitMQ@2025-08-01-preview' = {
     environment: environment
     application: storeApp.id
     queue: 'orders'
-    codeReference: 'src/order-service/plugins/messagequeue.js#L33'
+    codeReference: 'src/order-service/plugins/messagequeue.js#L26'
   }
 }
 
@@ -58,28 +59,30 @@ resource registryCreds 'Radius.Security/secrets@2025-08-01-preview' = {
   }
 }
 
-resource orderServiceImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
-  name: 'order-service-image'
-  properties: {
-    environment: environment
-    application: storeApp.id
-    build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
-    }
-  }
-  dependsOn: [
-    registryCreds
-  ]
-}
-
 resource makelineServiceImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
   name: 'makeline-service-image'
   properties: {
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/makeline-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
     }
+    codeReference: 'src/makeline-service/Dockerfile'
+  }
+  dependsOn: [
+    registryCreds
+  ]
+}
+
+resource orderServiceImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
+  name: 'order-service-image'
+  properties: {
+    environment: environment
+    application: storeApp.id
+    build: {
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/order-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+    }
+    codeReference: 'src/order-service/Dockerfile'
   }
   dependsOn: [
     registryCreds
@@ -92,22 +95,9 @@ resource productServiceImage 'Radius.Compute/containerImages@2025-08-01-preview'
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/product-service?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
     }
-  }
-  dependsOn: [
-    registryCreds
-  ]
-}
-
-resource storeFrontImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
-  name: 'store-front-image'
-  properties: {
-    environment: environment
-    application: storeApp.id
-    build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
-    }
+    codeReference: 'src/product-service/Dockerfile'
   }
   dependsOn: [
     registryCreds
@@ -120,8 +110,24 @@ resource storeAdminImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-admin?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
     }
+    codeReference: 'src/store-admin/Dockerfile'
+  }
+  dependsOn: [
+    registryCreds
+  ]
+}
+
+resource storeFrontImage 'Radius.Compute/containerImages@2025-08-01-preview' = {
+  name: 'store-front-image'
+  properties: {
+    environment: environment
+    application: storeApp.id
+    build: {
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/store-front?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
+    }
+    codeReference: 'src/store-front/Dockerfile'
   }
   dependsOn: [
     registryCreds
@@ -134,8 +140,9 @@ resource virtualCustomerImage 'Radius.Compute/containerImages@2025-08-01-preview
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-customer?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
     }
+    codeReference: 'src/virtual-customer/Dockerfile'
   }
   dependsOn: [
     registryCreds
@@ -148,8 +155,9 @@ resource virtualWorkerImage 'Radius.Compute/containerImages@2025-08-01-preview' 
     environment: environment
     application: storeApp.id
     build: {
-      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=7ce10c5110d6a52d3517dfb6d7a7b7b2edf2e5a5'
+      source: 'git::https://github.com/willtsai/aks-store-demo.git//src/virtual-worker?ref=3351867a6e0ef3c84fbdbcf20c5c50b605fbc48b'
     }
+    codeReference: 'src/virtual-worker/Dockerfile'
   }
   dependsOn: [
     registryCreds
@@ -173,17 +181,17 @@ resource orderServiceContainer 'Radius.Compute/containers@2025-08-01-preview' = 
           ORDER_QUEUE_HOSTNAME: {
             value: rabbitmq.properties.host
           }
-          ORDER_QUEUE_PORT: {
-            value: '5672'
-          }
           ORDER_QUEUE_NAME: {
             value: 'orders'
           }
-          ORDER_QUEUE_USERNAME: {
-            value: 'username'
-          }
           ORDER_QUEUE_PASSWORD: {
             value: orderQueuePassword
+          }
+          ORDER_QUEUE_PORT: {
+            value: '5672'
+          }
+          ORDER_QUEUE_USERNAME: {
+            value: 'username'
           }
         }
       }
@@ -210,42 +218,42 @@ resource makelineServiceContainer 'Radius.Compute/containers@2025-08-01-preview'
           }
         }
         env: {
+          ORDER_DB_COLLECTION_NAME: {
+            value: 'orders'
+          }
+          ORDER_DB_NAME: {
+            value: 'orderdb'
+          }
+          ORDER_DB_PASSWORD: {
+            value: orderDbPassword
+          }
+          ORDER_DB_URI: {
+            value: 'mongodb://${mongodb.properties.endpoint}:10260/?tls=true&tlsAllowInvalidCertificates=true'
+          }
+          ORDER_DB_USERNAME: {
+            value: 'username'
+          }
+          ORDER_QUEUE_NAME: {
+            value: 'orders'
+          }
+          ORDER_QUEUE_PASSWORD: {
+            value: orderQueuePassword
+          }
           ORDER_QUEUE_URI: {
             value: 'amqp://${rabbitmq.properties.host}:5672'
           }
           ORDER_QUEUE_USERNAME: {
             value: 'username'
           }
-          ORDER_QUEUE_PASSWORD: {
-            value: orderQueuePassword
-          }
-          ORDER_QUEUE_NAME: {
-            value: 'orders'
-          }
-          ORDER_DB_URI: {
-            value: 'mongodb://${mongodb.properties.endpoint}:10260/?tls=true&tlsAllowInvalidCertificates=true'
-          }
-          ORDER_DB_NAME: {
-            value: 'orderdb'
-          }
-          ORDER_DB_COLLECTION_NAME: {
-            value: 'orders'
-          }
-          ORDER_DB_USERNAME: {
-            value: 'username'
-          }
-          ORDER_DB_PASSWORD: {
-            value: orderDbPassword
-          }
         }
       }
     }
     connections: {
-      rabbitmq: {
-        source: rabbitmq.id
-      }
       mongodb: {
         source: mongodb.id
+      }
+      rabbitmq: {
+        source: rabbitmq.id
       }
     }
   }
@@ -264,11 +272,32 @@ resource productServiceContainer 'Radius.Compute/containers@2025-08-01-preview' 
             containerPort: 3002
           }
         }
-        env: {
-          AI_SERVICE_URL: {
-            value: 'http://ai-service:5001/'
+      }
+    }
+  }
+}
+
+resource storeAdminContainer 'Radius.Compute/containers@2025-08-01-preview' = {
+  name: 'store-admin'
+  properties: {
+    environment: environment
+    application: storeApp.id
+    containers: {
+      storeAdmin: {
+        image: storeAdminImage.properties.imageReference
+        ports: {
+          web: {
+            containerPort: 8081
           }
         }
+      }
+    }
+    connections: {
+      makelineservice: {
+        source: makelineServiceContainer.id
+      }
+      productservice: {
+        source: productServiceContainer.id
       }
     }
   }
@@ -300,32 +329,6 @@ resource storeFrontContainer 'Radius.Compute/containers@2025-08-01-preview' = {
   }
 }
 
-resource storeAdminContainer 'Radius.Compute/containers@2025-08-01-preview' = {
-  name: 'store-admin'
-  properties: {
-    environment: environment
-    application: storeApp.id
-    containers: {
-      storeAdmin: {
-        image: storeAdminImage.properties.imageReference
-        ports: {
-          web: {
-            containerPort: 8081
-          }
-        }
-      }
-    }
-    connections: {
-      productservice: {
-        source: productServiceContainer.id
-      }
-      makelineservice: {
-        source: makelineServiceContainer.id
-      }
-    }
-  }
-}
-
 resource virtualCustomerContainer 'Radius.Compute/containers@2025-08-01-preview' = {
   name: 'virtual-customer'
   properties: {
@@ -335,11 +338,11 @@ resource virtualCustomerContainer 'Radius.Compute/containers@2025-08-01-preview'
       virtualCustomer: {
         image: virtualCustomerImage.properties.imageReference
         env: {
-          ORDER_SERVICE_URL: {
-            value: 'http://order-service:3000/'
-          }
           ORDERS_PER_HOUR: {
-            value: '100'
+            value: '30'
+          }
+          ORDER_SERVICE_URL: {
+            value: 'http://${orderServiceContainer.properties.hosts['orderService']}:3000/'
           }
         }
       }
@@ -362,10 +365,10 @@ resource virtualWorkerContainer 'Radius.Compute/containers@2025-08-01-preview' =
         image: virtualWorkerImage.properties.imageReference
         env: {
           MAKELINE_SERVICE_URL: {
-            value: 'http://makeline-service:3001'
+            value: 'http://${makelineServiceContainer.properties.hosts['makelineService']}:3001'
           }
           ORDERS_PER_HOUR: {
-            value: '100'
+            value: '20'
           }
         }
       }

@@ -4,5 +4,14 @@
   },
   "extensions": {
     "radius": "br:biceptypes.azurecr.io/radius:latest"
+  },
+  "analyzers": {
+    "core": {
+      "rules": {
+        "prefer-unquoted-property-names": {
+          "level": "off"
+        }
+      }
+    }
   }
 }
