@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "runId": "mtbrku2r-sc",
+  "startedAt": "2026-08-27T16:55:47.523Z",
+  "baseline": {
+    "app.bicep": "sha256:5041759a2cc1ffd31d34d1a998f2b15b39558890291f6de1db9bb6f1bd3f2035",
+    "app.origin.json": null,
+    "bicepconfig.json": "sha256:bd7215982f25ff786f59baf9478cbbeac135942808bac1cac89c3d66c22ff20e",
+    "custom-types.tgz": null,
+    "custom-types.yaml": null
+  }
+}
