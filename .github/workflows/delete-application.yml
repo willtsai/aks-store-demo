@@ -14,7 +14,7 @@ on:
       environment:
         description: 'GitHub Environment name'
         required: true
-        default: 'aks-staging'
+        default: 'Delete-me'
       application:
         description: 'Name of the application to delete'
         required: true
@@ -32,7 +32,7 @@ jobs:
   detect:
     name: Detect provider
     runs-on: ubuntu-24.04
-    environment: ${{ inputs.environment || 'aks-staging' }}
+    environment: ${{ inputs.environment || 'Delete-me' }}
     outputs:
       provider: ${{ steps.detect.outputs.provider }}
     steps:
@@ -55,7 +55,7 @@ jobs:
     if: ${{ needs.detect.outputs.provider == 'azure' }}
     uses: ./.github/workflows/delete-azure.yml
     with:
-      environment: ${{ inputs.environment || 'aks-staging' }}
+      environment: ${{ inputs.environment || 'Delete-me' }}
       resource_type: application
       name: ${{ inputs.application }}
     secrets: inherit
