@@ -113,7 +113,7 @@ jobs:
             --file "$RADIUS_TARGET_KUBECONFIG"
 
       - name: Set up control plane
-        uses: radius-project/ai-extensions/.github/extension/actions/setup-control-plane@6317dbb691b75e0e4b65165d3117e014370d8071
+        uses: radius-project/ai-extensions/.github/extension/actions/setup-control-plane@dfe9cc4967fa359940e00e1c042a5909272662b0
 
       - name: Project cloud OIDC tokens into Radius pods
         env:
@@ -173,7 +173,7 @@ jobs:
 
       - name: Restore Radius state
         id: restore-state
-        uses: radius-project/ai-extensions/.github/extension/actions/restore-state@6317dbb691b75e0e4b65165d3117e014370d8071
+        uses: radius-project/ai-extensions/.github/extension/actions/restore-state@dfe9cc4967fa359940e00e1c042a5909272662b0
         with:
           namespace: ${{ vars.KUBERNETES_NAMESPACE || 'default' }}
 
@@ -264,13 +264,13 @@ jobs:
           echo "✅ No applications are deployed to environment '${RESOURCE_NAME}'; safe to delete."
 
       - name: Delete Radius resource
-        uses: radius-project/ai-extensions/.github/extension/actions/delete-resource@6317dbb691b75e0e4b65165d3117e014370d8071
+        uses: radius-project/ai-extensions/.github/extension/actions/delete-resource@dfe9cc4967fa359940e00e1c042a5909272662b0
         with:
           resource-type: ${{ inputs.resource_type }}
           name: ${{ inputs.name }}
 
       - name: Teardown
         if: always()
-        uses: radius-project/ai-extensions/.github/extension/actions/teardown@6317dbb691b75e0e4b65165d3117e014370d8071
+        uses: radius-project/ai-extensions/.github/extension/actions/teardown@dfe9cc4967fa359940e00e1c042a5909272662b0
         with:
           state-restored: ${{ steps.restore-state.outputs.state-restored }}
