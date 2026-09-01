@@ -1,10 +1,10 @@
 # Static delete-environment dispatcher, owned by radius-project/ai-extensions
 # (issue #303). Unlike the deploy/verify/delete-application workflows — which are
-# fetched from radius-project/radius at commit time — this file and its Azure
+# fetched from radius-project/ai-extensions at commit time — this file and its Azure
 # provider (delete-environment-azure.yml) live here so the environment-delete
 # safety guard (refuse to delete an environment that still has deployed apps)
 # can be owned and reviewed in this repo. The extension commits both files
-# verbatim (only filling the delete-me-again dispatch default) into the target repo's
+# verbatim (only filling the aks-dev dispatch default) into the target repo's
 # .github/workflows/.
 #
 # It binds to the selected GitHub Environment so environment-scoped variables are
@@ -23,7 +23,7 @@ on:
       environment:
         description: 'GitHub Environment name'
         required: true
-        default: 'delete-me-again'
+        default: 'aks-dev'
       environment_name:
         description: 'Radius environment name to delete (defaults to the GitHub Environment name)'
         required: false
@@ -46,7 +46,7 @@ jobs:
   detect:
     name: Detect provider
     runs-on: ubuntu-24.04
-    environment: ${{ inputs.environment || 'delete-me-again' }}
+    environment: ${{ inputs.environment || 'aks-dev' }}
     outputs:
       provider: ${{ steps.detect.outputs.provider }}
     steps:
@@ -70,7 +70,7 @@ jobs:
     if: ${{ needs.detect.outputs.provider == 'azure' }}
     uses: ./.github/workflows/delete-environment-azure.yml
     with:
-      environment: ${{ inputs.environment || 'delete-me-again' }}
+      environment: ${{ inputs.environment || 'aks-dev' }}
       resource_type: environment
-      name: ${{ inputs.environment_name || inputs.environment || 'delete-me-again' }}
+      name: ${{ inputs.environment_name || inputs.environment || 'aks-dev' }}
     secrets: inherit
