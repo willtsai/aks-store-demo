@@ -109,18 +109,24 @@ jobs:
           # Pass environment-controlled values through the environment rather
           # than interpolating them into the shell source, so a crafted value
           # cannot execute commands in this OIDC + write job.
-          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          #
+          # The resource group here is the one the cluster lives in, which is
+          # not AZURE_RESOURCE_GROUP: that one is where the application's
+          # resources are created, and the two are allowed to differ. Falls back
+          # to it for environments created before AZURE_AKS_RESOURCE_GROUP was
+          # recorded.
+          AZURE_AKS_RESOURCE_GROUP: ${{ vars.AZURE_AKS_RESOURCE_GROUP || vars.AZURE_RESOURCE_GROUP }}
           AZURE_AKS_CLUSTER_NAME: ${{ vars.AZURE_AKS_CLUSTER_NAME }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
         run: |
           az aks get-credentials \
-            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --resource-group "$AZURE_AKS_RESOURCE_GROUP" \
             --name "$AZURE_AKS_CLUSTER_NAME" \
             --subscription "$AZURE_SUBSCRIPTION_ID" \
             --file "$RADIUS_TARGET_KUBECONFIG"
 
       - name: Set up control plane
-        uses: radius-project/ai-extensions/.github/extension/actions/setup-control-plane@f89e730f441063ff26adbd9006296fc111134da7
+        uses: radius-project/ai-extensions/.github/extension/actions/setup-control-plane@c4822f8952d55dfca3c54fa3b8484fdcdf65b01e
 
       - name: Project cloud OIDC tokens into Radius pods
         env:
@@ -180,7 +186,7 @@ jobs:
 
       - name: Restore Radius state
         id: restore-state
-        uses: radius-project/ai-extensions/.github/extension/actions/restore-state@f89e730f441063ff26adbd9006296fc111134da7
+        uses: radius-project/ai-extensions/.github/extension/actions/restore-state@c4822f8952d55dfca3c54fa3b8484fdcdf65b01e
         with:
           namespace: ${{ vars.KUBERNETES_NAMESPACE || 'default' }}
 
@@ -271,13 +277,13 @@ jobs:
           echo "✅ No applications are deployed to environment '${RESOURCE_NAME}'; safe to delete."
 
       - name: Delete Radius resource
-        uses: radius-project/ai-extensions/.github/extension/actions/delete-resource@f89e730f441063ff26adbd9006296fc111134da7
+        uses: radius-project/ai-extensions/.github/extension/actions/delete-resource@c4822f8952d55dfca3c54fa3b8484fdcdf65b01e
         with:
           resource-type: ${{ inputs.resource_type }}
           name: ${{ inputs.name }}
 
       - name: Teardown
         if: always()
-        uses: radius-project/ai-extensions/.github/extension/actions/teardown@f89e730f441063ff26adbd9006296fc111134da7
+        uses: radius-project/ai-extensions/.github/extension/actions/teardown@c4822f8952d55dfca3c54fa3b8484fdcdf65b01e
         with:
           state-restored: ${{ steps.restore-state.outputs.state-restored }}
